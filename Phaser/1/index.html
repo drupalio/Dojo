@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+	<script type="text/javascript" src="phaser.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+(function(){
+	var game = new Phaser.Game(800,600, Phaser.CANVAS, '',{
+		preload:preload,
+		create: create,
+		update:update 
+	});
+	var cat, catcher, cursors, txtScore, score;
+
+	function  preload(){
+		game.load.image('cat','cat.png');
+		game.load.image('catcher','catcher.png');
+		game.load.image('bg','bg.png');
+	}
+
+	function create(){
+		
+		game.add.sprite(0,0,"bg");
+		
+		catcher=game.add.sprite(400,300,"catcher");
+		catcher.anchor.setTo(.5,0);
+		game.physics.enable(catcher,Phaser.Physics.ARCADE);
+
+		cat = game.add.sprite( Math.random() * game.width,
+		Math.random() * game.height, "cat");
+		game.physics.enable(cat, Phaser.Physics.ARCADE);
+
+		score = 0;
+		var style = { font: "20px Arial", fill: "#FFF"};
+		txtScore = game.add.text(10, 10, score.toString(),style);
+
+		cursors = game.input.keyboard.createCursorKeys();
+	}
+
+	function update(){
+		if(cursors.left.isDown) {
+		catcher.x  -= 5;
+		catcher.scale.x = 1;
+		}
+		if(cursors.right.isDown) {
+		catcher.x += 5;
+		catcher.scale.x = -1;
+		}
+		if(cursors.up.isDown) {
+		catcher.y -= 5;
+		}
+		if(cursors.down.isDown) {
+		catcher.y += 5;
+		}
+		game.physics.arcade.overlap(catcher, cat,catHitHandler);
+	}
+
+
+	function catHitHandler(catcherObject, catObject) {
+	catObject.x = Math.random() * game.width;
+	catObject.y = Math.random() * game.height;
+	score ++;
+	txtScore.setText( score.toString());
+	}
+
+}());
+</script>	
+</body>
+</html>
